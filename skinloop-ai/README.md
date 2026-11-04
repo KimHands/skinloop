@@ -19,7 +19,7 @@
 → LLM을 통한 결과 문장화
 ```
 
-LLM 결과 문장화는 추후 연동할 예정입니다.
+LLM 문장화는 이 모듈이 아니라 `skinloop-be/app/llm_formatter.py`가 맡습니다.
 
 ## 프로젝트 구조
 
@@ -58,20 +58,20 @@ requirements-dev.txt         # 테스트 패키지 목록
 
 검증은 `python -m pytest`, `python scripts/validate_seed.py`, `python scripts/evaluate_model.py`로 실행합니다.
 
-LLM 결과 문장화와 실제 서비스 API 연결은 추후 진행할 예정입니다.
+LLM 문장화와 서비스 API는 `skinloop-be`에 연결되어 있습니다.
 
 ## 백엔드 연동
 
-이 저장소는 계산·입력검증만 담당하는 순수 모듈이며, 별도 서비스로 띄우지 않습니다.
+이 모듈은 계산·입력검증만 담당하는 순수 모듈이며, 별도 서비스로 띄우지 않습니다.
 
-* **연동 방식**: 백엔드(FastAPI)가 이 저장소의 `src/`를 **vendoring(복사)** 해 같은 프로세스에서 직접 import 합니다.
+* **연동 방식**: 백엔드(FastAPI)가 이 모듈의 `src/`를 **vendoring(복사)** 해 같은 프로세스에서 직접 import 합니다.
   ```python
   from src.habit_pattern import analyze_patterns
   from src.whatif import run_whatif
   ```
   vendoring 대상은 `src/` 디렉터리 하나입니다. `src/`는 import 시 파일·네트워크 부작용이나 하드코딩 경로가 없고, 모든 내부 import가 절대경로 `src.*`라 복사만으로 동작합니다. (`scripts/`는 개발·검증용이라 복사 대상이 아닙니다.)
 * **런타임 의존성**: `numpy`, `pandas`, `scipy`, `scikit-learn` (하한만 지정, `requirements.txt` 참조). 백엔드 의존성과 충돌하지 않도록 정확한 버전 핀은 사용하지 않습니다.
-* **입출력 계약**: 입력 필드 형식·함수 시그니처·출력 키·책임 경계는 `docs/integration_contract.md`가 정본입니다. 피부 점수 계산식도 이 저장소의 `src/skin_score.py`를 정본으로 사용하고 백엔드에서 재구현하지 않습니다.
+* **입출력 계약**: 입력 필드 형식·함수 시그니처·출력 키·책임 경계는 `docs/integration_contract.md`가 정본입니다. 피부 점수 계산식도 이 모듈의 `src/skin_score.py`를 정본으로 사용하고 백엔드에서 재구현하지 않습니다.
 * **HTTP 응답 변환, camelCase↔snake_case 매핑, DB 조회·저장, LLM 문장화, 타임아웃·폴백**은 백엔드 연동 계층의 책임입니다.
 
 ## 주의사항

@@ -1,6 +1,6 @@
 # 가비아 서버 배포 런북
 
-멋사 가비아 클라우드 서버 1대(2vCore/4GB, 공인 IP 1개)에 nginx + FE + BE + PostgreSQL을
+멋사 가비아 클라우드 서버 1대(2vCore/4GB, 공인 IP 1개)에 Caddy + FE + BE + PostgreSQL을
 docker compose로 올린다. ⚠️ **서버는 2026-08-28 23:59 일괄 삭제** → 데이터/코드 백업 필수.
 
 ## 0. 준비물
@@ -26,8 +26,8 @@ sudo ufw --force enable
 
 ## 2. 레포 배치 + 운영 .env
 ```bash
-git clone https://github.com/KimHands/skinloop-full.git
-cd skinloop-full
+git clone https://github.com/KimHands/skinloop.git
+cd skinloop
 cp .env.example .env
 ```
 `.env` 운영값(예):
@@ -62,8 +62,8 @@ bash deploy/smoke.sh http://<공인IP-또는-도메인>
 - 서버 삭제(8/28) 전 DB 백업: `docker compose exec db pg_dump -U skinloop skinloop > backup.sql`.
 
 ## (선택) HTTPS
-도메인이 있으면 nginx 컨테이너 대신 호스트 nginx + certbot, 또는 caddy로 TLS 종단.
-행사용 데모는 http로도 충분.
+`.env`의 `SITE_ADDRESS`에 도메인(또는 `1-2-3-4.nip.io` 형식)을 지정하면 Caddy가 자동으로 HTTPS 인증서를 발급한다.
+이때 `CORS_ORIGINS`, `NEXT_PUBLIC_API_BASE`도 `https://` 주소로 맞춘다.
 
 ## 롤백/운영
 ```bash

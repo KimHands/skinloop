@@ -1,7 +1,7 @@
 # SkinLoop 리버스 프록시 (Caddy) — / → FE, /api → BE
 # SITE_ADDRESS:
 #   로컬:  :80            (기본, 평문 http)
-#   배포:  <도메인>        (예: 1-201-117-248.nip.io) → Caddy가 Let's Encrypt 자동 HTTPS
+#   배포:  <도메인>        (예: 1-2-3-4.nip.io) → Caddy가 Let's Encrypt 자동 HTTPS
 {
 	email {$ACME_EMAIL:admin@skinloop.app}
 }

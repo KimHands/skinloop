@@ -1,13 +1,13 @@
-# skinloop-full
+# skinloop
 
 SkinLoop — 생활습관(수면·야식·스트레스·운동·화장품)과 피부 상태를 함께 기록해 상관 패턴을 찾고, 습관 하나를 바꿨을 때 4주 뒤 변화를 시나리오로 비교해주는 웹 서비스. 멋사(멋쟁이사자처럼) 중앙 해커톤 팀 프로젝트. 개발 5일 / 핵심 기능 3개. **상세 명세는 `spec.md` 참조.**
 
 ## 팀 / 레포
 - 두 파트로 나뉜다:
-  - **FullStack 파트**: 김서연(FS) · 김종건 → **FullStack Repo**
-  - **AI 파트**: 김서연(AI) · 김서진 · 김종건 → **AI Repo**
+  - **FullStack 파트**: 김서연(FS) · 김종건 → `skinloop-fe/`, `skinloop-be/`
+  - **AI 파트**: 김서연(AI) · 김서진 · 김종건 → `skinloop-ai/`
   - ※ 두 김서연은 **동명이인**(FS 김서연 ≠ AI 김서연).
-- 레포는 **2개**. **이 레포(`skinloop-full`)가 FullStack Repo**이고, AI Repo는 GitHub에 별도로 존재.
+- 레포는 **1개**(`KimHands/skinloop`). 옛 `skinloop-full`의 새 이름이며, 옛 AI 레포 `SkinLoopAI`의 이력은 `skinloop-ai/`로 옮겼다(원본은 아카이브).
 - 박진영도 팀원이나 개발 과정에는 참여하지 않음.
 - 모든 작업은 **브랜치 분기 + PR** 위주. main에 직접 커밋/푸시하지 않는다.
 
