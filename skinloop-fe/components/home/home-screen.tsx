@@ -30,6 +30,10 @@ export default function HomeScreen() {
 
   const scores = records.map((item) => item.skinScore);
   const latestScore = scores.length ? scores[scores.length - 1] : null;
+  const latestRange =
+    latestScore != null
+      ? `${Math.max(0, latestScore - 3)}~${Math.min(100, latestScore + 3)}`
+      : "…";
   const recentScores = scores.slice(-7);
   const lowScore = recentScores.length ? Math.min(...recentScores) : null;
   const highScore = recentScores.length ? Math.max(...recentScores) : null;
@@ -67,7 +71,7 @@ export default function HomeScreen() {
         <>
           <section className="card score-card">
             <div className="score-ring">
-              <span>{latestScore ?? "…"}</span>
+              <span>{latestRange}</span>
             </div>
             <div className="score-copy">
               <span className="caption">최근 점수</span>
