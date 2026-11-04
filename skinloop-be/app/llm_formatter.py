@@ -33,7 +33,8 @@ _SYSTEM_PROMPT = (
     "주어진 JSON 분석 결과만 근거로 2~3문장의 한국어 요약을 작성하세요. "
     "의학적 진단이나 인과관계 단정 표현('원인입니다', '~때문입니다')은 쓰지 말고, "
     "'연관이 있어 보입니다', '경향이 나타났습니다' 같은 참고 정보 톤을 유지하세요. "
-    "JSON에 없는 수치나 사실을 만들어내지 마세요."
+    "JSON에 없는 수치나 사실을 만들어내지 마세요. "
+    "점수는 단일 값 대신 범위로 쓰고, 내부 키 대신 label 값을 쓰세요."
 )
 
 
@@ -69,8 +70,8 @@ def summarize_whatif(result: dict) -> str:
         return _chat(
             "다음은 습관 변경 시나리오(What-if) 비교 결과입니다:\n"
             f"{json.dumps(result, ensure_ascii=False)}\n"
-            "estimatedDifference는 예측 보장이 아니라 비교 참고값이라는 점을 "
-            "자연스럽게 반영해서 요약해 주세요."
+            "estimatedDifference는 문장에 쓰지 말고, current와 changed의 range를 "
+            "비교해서 요약해 주세요. 예측 보장이 아니라 비교 참고값이라는 점도 반영해 주세요."
         )
     except Exception:
         return _rule_based_whatif(result)
@@ -80,15 +81,17 @@ def _rule_based_habit_pattern(result: dict) -> str:
     impacts = result.get("impacts") or []
     if not impacts:
         return "아직 뚜렷한 연관 패턴을 찾지 못했습니다. 기록을 더 쌓아보세요."
-    top = impacts[0]
-    factor = top.get("factor", "일부 습관")
-    return f"최근 기록에서 {factor}이(가) 피부 상태와 연관이 있는 것으로 나타났습니다."
+    label = impacts[0].get("label", "일부 습관")
+    return f"최근 기록에서 '{label}' 항목이 피부 상태와 연관이 있는 것으로 나타났습니다."
 
 
 def _rule_based_whatif(result: dict) -> str:
     label = result.get("label", "선택하신 습관")
-    diff = result.get("estimatedDifference")
-    if diff is None:
-        return f"{label} 변경 시나리오의 비교 결과를 계산했습니다."
-    direction = "개선" if diff > 0 else "변화"
-    return f"{label}을(를) 바꿨을 때 피부 점수가 참고상 약 {abs(diff):.1f}점 {direction}될 것으로 비교됩니다."
+    current = (result.get("current") or {}).get("range")
+    changed = (result.get("changed") or {}).get("range")
+    if not current or not changed:
+        return f"'{label}' 시나리오의 비교 결과를 계산했습니다."
+    return (
+        f"피부 점수 범위는 현재 유지 {current['min']}~{current['max']}, "
+        f"'{label}' {changed['min']}~{changed['max']}로 비교됩니다."
+    )
