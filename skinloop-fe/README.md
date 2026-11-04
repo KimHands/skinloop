@@ -6,7 +6,7 @@
 
 - Node.js 20 이상
 - npm 또는 pnpm
-- `feat/backend-core` 기반 FastAPI 서버
+- `skinloop-be`의 FastAPI 서버
 
 ## 환경변수
 

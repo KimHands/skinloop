@@ -29,5 +29,5 @@
 
 ## 이 레포의 위치
 
-`skinloop-full` = **FullStack Repo** (Next.js FE + FastAPI BE). AI 분석 모듈은 **별도 AI Repo**.
-스펙 문서는 제품 전체를 다루므로 AI 파트 내용(§5·6·7 일부)도 포함하되, 실제 구현 위치는 레포가 다를 수 있음.
+프론트엔드는 `skinloop-fe/`, 백엔드는 `skinloop-be/`, AI 분석 모듈은 `skinloop-ai/`에 있다.
+스펙 문서는 제품 전체를 다루며, 프로젝트 소개는 루트 [README](../README.md)에 있다.

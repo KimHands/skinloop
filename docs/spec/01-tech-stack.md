@@ -37,18 +37,18 @@ pandas·numpy(처리), scipy(Spearman 상관), scikit-learn(GBM·permutation imp
 
 | 레포 | 내용 | 위치 |
 | --- | --- | --- |
-| **FullStack Repo** (`skinloop-full`, 이 레포) | Next.js FE + FastAPI BE | GitHub: KimHands/skinloop-full |
-| **AI Repo** | AI 분석 모듈(habit_pattern·whatif·LLM·seed) | GitHub 별도 |
+| **`skinloop`** (이 레포) | Next.js FE + FastAPI BE + AI 분석 모듈 | GitHub: KimHands/skinloop |
 
-- 원 spec §2는 "AI 분석은 백엔드 내 모듈로 둔다"였으나, **실제 운영은 AI Repo로 분리**한다.
-  → BE와 AI 모듈 간 **인터페이스 계약**을 정의해야 함 ([open-questions](../plan/open-questions.md) 참조).
+- 개발 중에는 AI Repo(`SkinLoopAI`)를 따로 두었으나, 이후 이력째 `skinloop-ai/`로 합쳤다.
+  → BE는 `skinloop-ai/src`의 복사본(`skinloop-be/src`)을 in-process로 호출한다 ([open-questions](../plan/open-questions.md) A1 참조).
 
 ## 실제 폴더 구조 (현재)
 
 ```
-skinloop-full/
+skinloop/
 ├─ skinloop-fe/     Next.js 15 (App Router)
 ├─ skinloop-be/     FastAPI
+├─ skinloop-ai/     AI 분석 모듈
 ├─ docs/            이 문서
 └─ spec.md          단일 소스
 ```

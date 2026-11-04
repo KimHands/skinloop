@@ -30,6 +30,7 @@
 | O1 | QA(구현순서 13) 담당 | 원 spec은 박진영이나 개발 미참여 → 재배정 |
 | O2 | 환경변수 목록 | `NEXT_PUBLIC_API_BASE`, `DATABASE_URL`, `OPENAI_API_KEY` 등 공유 방법 |
 | O3 | CORS 허용 도메인 | 현재 `*`. 배포 시 FE 도메인으로 좁힘 |
+| O4 | 샘플 시드 불일치 | 앱의 28일 샘플(`skinloop-be/app/seed.py`)은 1위 요인이 운동 시간이고, AI 시드(`skinloop-ai/data/seed_28days.json`)와 명세 기준은 `sleep_short`. 맞출지 미정 |
 
 ## 결정 로그
 

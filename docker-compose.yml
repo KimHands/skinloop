@@ -1,4 +1,4 @@
-# SkinLoop 로컬 통합 스택: nginx + FE + BE + PostgreSQL
+# SkinLoop 로컬 통합 스택: Caddy + FE + BE + PostgreSQL
 # 사용: cp .env.example .env  →  docker compose up --build  →  http://localhost
 services:
   db:
@@ -36,7 +36,7 @@ services:
     build:
       context: ./skinloop-fe
       args:
-        # 브라우저가 접근하는 오리진(nginx). 배포 시 공인 IP/도메인으로 교체.
+        # 브라우저가 접근하는 오리진(Caddy). 배포 시 공인 IP/도메인으로 교체.
         NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost}
     expose:
       - "3000"

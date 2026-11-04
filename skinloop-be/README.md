@@ -1,10 +1,10 @@
 # skinloop-be
 
-SkinLoop FullStack Repo의 백엔드 (FastAPI).
+SkinLoop의 백엔드 (FastAPI).
 
 - **session/records/demo**: DB(SQLAlchemy) 기반. 이 레포에서 구현.
 - **patterns/whatif**: AI 분석을 **in-process**로 호출(`src.habit_pattern`·`src.whatif`) +
-  `llm_formatter`로 문장화. AI 모듈(`src.*`)은 **AI Repo** 소유.
+  `llm_formatter`로 문장화. `src/`는 `../skinloop-ai/src`의 복사본이다.
 
 ## 로컬 실행
 
@@ -22,8 +22,7 @@ uvicorn app.main:app --reload --port 8000
 ```
 
 - 헬스체크: http://localhost:8000/health · API 문서: http://localhost:8000/docs
-- ⚠️ patterns/whatif는 AI 모듈(`src.*`)이 PYTHONPATH에 있어야 실제 동작한다.
-  없으면 앱은 정상 부팅되고 두 엔드포인트만 **503 AI_UNAVAILABLE**로 응답한다.
+- `src/`를 찾지 못하면 앱은 정상 부팅되고 patterns/whatif만 **503 AI_UNAVAILABLE**로 응답한다.
 
 ## 테스트
 
@@ -31,7 +30,7 @@ uvicorn app.main:app --reload --port 8000
 pytest              # 인메모리 SQLite, 테스트마다 격리 (session/records/demo/seed/skin_score)
 ```
 
-patterns/whatif의 통계·LLM 검증은 AI Repo 쪽 책임(여기선 계약/부팅만 확인).
+통계 계산 자체의 검증은 `skinloop-ai/`의 테스트가 맡는다(여기선 API 계약과 폴백을 확인).
 
 ## 구조
 
@@ -45,7 +44,7 @@ app/
 ├─ deps.py            get_db · require_session(X-Anon-Token → 세션, 401)
 ├─ skin_score.py      calc_skin_score (spec §3)
 ├─ seed.py            28일치 시드 생성 + 완료 실험 1건 (spec §7)
-├─ llm_formatter.py   계산 결과 → 한국어 문장화 (OpenAI, AI Repo 연동)
+├─ llm_formatter.py   계산 결과 → 한국어 문장화 (OpenAI, 실패 시 규칙 기반)
 ├─ analysis/frame.py  MIN_RECORDS · load_session_records (records 공용 헬퍼)
 └─ routers/           session · records · patterns · whatif · demo
 ```
@@ -58,14 +57,14 @@ app/
 | POST | /api/records | DB | ✅ 저장 + skin_score, 400/409 |
 | GET | /api/records | DB | ✅ 세션별 목록(오름차순) |
 | GET/DELETE | /api/demo | DB | ✅ 28일 시드 적재/해제(멱등) |
-| POST | /api/patterns | AI in-process | ✅ records body → 분석 + narrative |
-| POST | /api/whatif | AI in-process | ✅ records body → 시나리오 + narrative |
+| GET | /api/patterns | AI in-process | ✅ 세션 기록(DB) → 분석 + 문장화 |
+| POST | /api/whatif | AI in-process | ✅ 세션 기록(DB) → 시나리오 + 문장화 |
+| GET | /api/experiments | DB | ✅ 세션별 실험 목록 |
 
 ## AI 연동 (open-questions A1 = in-process)
 
-patterns/whatif는 프론트가 보낸 `records`(body)를 `src.habit_pattern`·`src.whatif`로
-직접 계산하고 `llm_formatter`로 문장화한다. AI 모듈은 AI Repo 소유이며 배포 시
-PYTHONPATH/패키지로 제공한다. ※ 향후 DB(records) 기반 session 조회 방식으로 통합 여지
-(schemas.RecordsPayload 주석 참조).
+patterns/whatif는 세션 기록을 DB에서 읽어 `src.habit_pattern`·`src.whatif`로 직접 계산하고
+`llm_formatter`로 문장화한다. `OPENAI_API_KEY`가 없거나 호출이 5초를 넘기거나 실패하면
+규칙 기반 문장으로 대체한다. `src/`의 정본은 `../skinloop-ai/src`다(`src/VENDORED.md`).
 
 상세 명세는 루트의 `spec.md` 및 `docs/spec/`.
